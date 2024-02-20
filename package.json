@@ -1,0 +1,19 @@
+{
+  "name": "movie-notes",
+  "version": "1.0.0",
+  "description": "API para cadastro de informações de filmes assistidos por usuários.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js"
+  },
+  "keywords": [],
+  "author": "Helena Guerra Passeti",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
+  }
+}
