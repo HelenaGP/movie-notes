@@ -34,11 +34,7 @@ class UsersController {
       throw new AppError("Usuário não encontrado.");
     }
 
-    console.log(email);
-
     const userWithUpdatedEmail = await database.get("SELECT * FROM users WHERE email = (?)", [email]);
-
-    console.log(userWithUpdatedEmail);
 
     if(userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id){
       throw new AppError("Email já está em uso.");
@@ -61,8 +57,6 @@ class UsersController {
       user.password = await hash(password, 8);
     }
 
-    console.log(user.name, user.email, user.password, id)
-    
     await database.run(`
       UPDATE users SET
       name = ?,
