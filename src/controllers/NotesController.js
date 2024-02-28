@@ -42,6 +42,53 @@ class NotesController{
       tags
     })
   }
+
+  async delete(request,response){
+    const { id } = request.params;
+
+    await knex("movieNotes").where({ id }).delete();
+
+    return response.json();
+  }
+
+  async index(request,response){
+    const { title, user_id, movieTags } = request.query;
+
+    let notes;
+
+    if(movieTags){
+      const filterTags = movieTags.split(",").map(tag => tag.trim());
+
+      notes = await knex("movieTags")
+        .select([
+          "notes.id",
+          "notes.title",
+          "notes.user_id"
+        ])
+        .where("notes.user_id", user_id)
+        .whereLike("notes.title", `%${title}%`)
+        .whereIn("name", filterTags)
+        .innerJoin("notes", "notes.id", "movieTags.note_id");
+    
+    } else {
+        notes = await knex ("movieNotes")
+          .where({ user_id })
+          .whereLike("title", `%${title}%`)
+          .orderBy("title");
+    }
+
+    const userTags = await knex("movieTags").where({ user_id });
+    const notesWithTags = notes.map(note => {
+      const noteTags = userTags.filter(tag => tag.note_id === note.id);
+
+      return {
+        ...note,
+        movieTags: noteTags
+      };
+    });
+
+    return response.json(notesWithTags);
+  }
 }
 
 module.exports = NotesController;
